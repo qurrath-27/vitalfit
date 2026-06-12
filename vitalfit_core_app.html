@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--vf-bg:#0a0b0e;--vf-surface:#111318;--vf-surface2:#181c24;--vf-border:#ffffff12;--vf-border2:#ffffff20;
+--vf-text:#f0f2f7;--vf-muted:#8892a4;--vf-accent:#00e5a0;--vf-accent2:#3b82f6;--vf-danger:#ff4d6d;--vf-warn:#fbbf24;
+--vf-pink:#ff6eb4;--vf-purple:#a78bfa;--vf-radius:14px;--vf-radius-sm:8px;
+font-family:'DM Sans',sans-serif;
+}
+.light-mode{
+--vf-bg:#f4f6fb;--vf-surface:#ffffff;--vf-surface2:#edf0f7;--vf-border:#e2e8f0;--vf-border2:#cbd5e1;
+--vf-text:#0f172a;--vf-muted:#64748b;--vf-accent:#059669;--vf-accent2:#2563eb;--vf-danger:#dc2626;--vf-warn:#d97706;
+--vf-pink:#db2777;--vf-purple:#7c3aed;
+}
+body{background:var(--vf-bg);color:var(--vf-text);min-height:100vh;transition:all .3s ease}
+.app{display:flex;flex-direction:column;min-height:100vh;max-width:960px;margin:0 auto}
+
+/* TOP BAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:0.5px solid var(--vf-border);position:sticky;top:0;background:var(--vf-bg);z-index:100}
+.logo{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.5px}
+.logo span{color:var(--vf-accent)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.mode-badge{font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;border:0.5px solid var(--vf-accent);color:var(--vf-accent);letter-spacing:.5px;text-transform:uppercase}
+.theme-btn{background:none;border:0.5px solid var(--vf-border2);border-radius:var(--vf-radius-sm);padding:6px 10px;color:var(--vf-muted);cursor:pointer;font-size:14px;display:flex;align-items:center;gap:6px;transition:.2s}
+.theme-btn:hover{background:var(--vf-surface2);color:var(--vf-text)}
+
+/* SCREENS */
+.screen{display:none;flex:1;padding:24px}
+.screen.active{display:block}
+
+/* GATEWAY / ONBOARDING */
+.gateway-hero{text-align:center;padding:48px 0 32px}
+.gateway-hero h1{font-family:'Syne',sans-serif;font-size:38px;font-weight:800;line-height:1.1;letter-spacing:-1px}
+.gateway-hero h1 em{font-style:normal;color:var(--vf-accent)}
+.gateway-hero p{color:var(--vf-muted);font-size:15px;margin-top:12px;max-width:480px;margin-inline:auto}
+.profile-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:680px;margin:32px auto 0}
+.profile-card{background:var(--vf-surface);border:0.5px solid var(--vf-border);border-radius:var(--vf-radius);padding:28px 24px;cursor:pointer;transition:.25s;text-align:left;position:relative;overflow:hidden}
+.profile-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.profile-card.senior::before{background:var(--vf-warn)}
+.profile-card.adult-male::before{background:var(--vf-accent2)}
+.profile-card.adult-female::before{background:var(--vf-pink)}
+.profile-card:hover{border-color:var(--vf-border2);transform:translateY(-2px)}
+.profile-card h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin:12px 0 6px}
+.profile-card p{font-size:13px;color:var(--vf-muted);line-height:1.6}
+.profile-card .card-icon{font-size:28px;color:var(--vf-muted)}
+.profile-card.senior .card-icon{color:var(--vf-warn)}
+.profile-card.adult-male .card-icon{color:var(--vf-accent2)}
+.profile-card.adult-female .card-icon{color:var(--vf-pink)}
+.select-badge{position:absolute;top:16px;right:16px;font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500}
+.profile-card.adult-female .select-badge{background:#ff6eb420;color:var(--vf-pink)}
+.profile-card.adult-male .select-badge{background:#3b82f620;color:var(--vf-accent2)}
+.profile-card.senior .select-badge{background:#fbbf2420;color:var(--vf-warn)}
+
+/* LAYOUT WITH SIDEBAR */
+.dashboard-layout{display:flex;gap:0;min-height:calc(100vh - 65px)}
+.sidebar{width:220px;flex-shrink:0;border-right:0.5px solid var(--vf-border);padding:20px 0;display:flex;flex-direction:column;gap:4px}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;font-weight:500;color:var(--vf-muted);cursor:pointer;transition:.2s;border-radius:0;position:relative}
+.sidebar-item:hover{background:var(--vf-surface2);color:var(--vf-text)}
+.sidebar-item.active{color:var(--vf-accent);background:var(--vf-surface2)}
+.sidebar-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--vf-accent)}
+.sidebar-item i{font-size:17px}
+.sidebar-section{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--vf-muted);padding:16px 20px 6px;text-transform:uppercase}
+.main-content{flex:1;padding:24px;min-width:0;overflow:hidden}
+
+/* SECTION HEADINGS */
+.section-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;margin-bottom:4px}
+.section-sub{font-size:13px;color:var(--vf-muted);margin-bottom:24px}
+
+/* CARDS GRID */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:24px}
+.stat-card{background:var(--vf-surface);border:0.5px solid var(--vf-border);border-radius:var(--vf-radius);padding:18px}
+.stat-card .label{font-size:11px;font-weight:500;color:var(--vf-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.stat-card .value{font-family:'Syne',sans-serif;font-size:26px;font-weight:700}
+.stat-card .sub{font-size:12px;color:var(--vf-muted);margin-top:4px}
+.stat-card.accent-green{border-left:2px solid var(--vf-accent)}
+.stat-card.accent-blue{border-left:2px solid var(--vf-accent2)}
+.stat-card.accent-pink{border-left:2px solid var(--vf-pink)}
+.stat-card.accent-warn{border-left:2px solid var(--vf-warn)}
+
+/* FEATURE BLOCK */
+.feature-block{background:var(--vf-surface);border:0.5px solid var(--vf-border);border-radius:var(--vf-radius);padding:20px;margin-bottom:16px}
+.feature-block h4{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.feature-block h4 i{color:var(--vf-accent)}
+
+/* AI CHAT AREA */
+.chat-area{background:var(--vf-surface);border:0.5px solid var(--vf-border);border-radius:var(--vf-radius);display:flex;flex-direction:column;height:480px}
+.chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.chat-messages::-webkit-scrollbar{width:4px}
+.chat-messages::-webkit-scrollbar-track{background:transparent}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--vf-border2);border-radius:4px}
+.msg{max-width:85%;padding:12px 16px;border-radius:var(--vf-radius);font-size:14px;line-height:1.6}
+.msg.bot{background:var(--vf-surface2);border:0.5px solid var(--vf-border);align-self:flex-start;border-radius:4px 14px 14px 14px}
+.msg.user{background:var(--vf-accent2);color:#fff;align-self:flex-end;border-radius:14px 4px 14px 14px}
+.msg-meta{font-size:11px;color:var(--vf-muted);margin-bottom:4px}
+.typing{display:flex;gap:5px;align-items:center;padding:14px 16px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--vf-muted);animation:bounce .8s infinite}
+.dot:nth-child(2){animation-delay:.2s}
+.dot:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+.chat-input-row{display:flex;gap:10px;padding:14px;border-top:0.5px solid var(--vf-border)}
+.chat-input{flex:1;background:var(--vf-surface2);border:0.5px solid var(--vf-border2);border-radius:var(--vf-radius-sm);padding:10px 14px;font-size:14px;color:var(--vf-text);font-family:'DM Sans',sans-serif;outline:none;transition:.2s}
+.chat-input:focus{border-color:var(--vf-accent)}
+.send-btn{background:var(--vf-accent);border:none;border-radius:var(--vf-radius-sm);padding:10px 18px;color:#0a0b0e;font-weight:700;font-size:14px;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px}
+.send-btn:hover{opacity:.85}
+
+/* QUICK CHIPS */
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px 12px}
+.chip{background:var(--vf-surface2);border:0.5px solid var(--vf-border2);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--vf-muted);cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif}
+.chip:hover{border-color:var(--vf-accent);color:var(--vf-accent)}
+
+/* PHASE TRACKER */
+.phase-track{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px}
+.phase-card{background:var(--vf-surface);border:0.5px solid var(--vf-border);border-radius:var(--vf-radius);padding:16px;text-align:center;cursor:pointer;transition:.2s}
+.phase-card.active-phase{border-color:var(--vf-accent);background:var(--vf-surface2)}
+.phase-card .phase-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--vf-border2)}
+.phase-card.active-phase .phase-num{color:var(--vf-accent)}
+.phase-card .phase-label{font-size:12px;font-weight:700;margin:4px 0 2px}
+.phase-card .phase-sub{font-size:11px;color:var(--vf-muted)}
+
+/* DAILY BLUEPRINT */
+.timeline{display:flex;flex-direction:column;gap:10px}
+.timeline-item{display:flex;gap:14px;align-items:flex-start;padding:14px;background:var(--vf-surface);border:0.5px solid var(--vf-border);border-radius:var(--vf-radius-sm)}
+.tl-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.tl-icon.morning{background:#fbbf2420;color:var(--vf-warn)}
+.tl-icon.noon{background:#3b82f620;color:var(--vf-accent2)}
+.tl-icon.midday{background:#00e5a020;color:var(--vf-accent)}
+.tl-icon.evening{background:#a78bfa20;color:var(--vf-purple)}
+.tl-icon.night{background:#ff6eb420;color:var(--vf-pink)}
+.tl-content .tl-time{font-size:11px;font-weight:700;color:var(--vf-muted);letter-spacing:.5px;text-transform:uppercase}
+.tl-content .tl-desc{font-size:13px;margin-top:3px;line-height:1.5}
+
+/* TABLE */
+.vf-table{width:100%;border-collapse:collapse;font-size:13px}
+.vf-table th{font-size:11px;font-weight:700;color:var(--vf-muted);text-align:left;padding:8px 12px;border-bottom:0.5px solid var(--vf-border);letter-spacing:.5px;text-transform:uppercase}
+.vf-table td{padding:10px 12px;border-bottom:0.5px solid var(--vf-border);vertical-align:top;line-height:1.5}
+.vf-table tr:last-child td{border-bottom:none}
+.vf-table tr:hover td{background:var(--vf-surface2)}
+
+/* SENIOR SPECIFIC */
+.sos-banner{background:var(--vf-danger);border-radius:var(--vf-radius);padding:20px;display:flex;align-items:center;gap:16px;margin-bottom:20px;cursor:pointer;transition:.2s}
+.sos-banner:hover{opacity:.9}
+.sos-banner h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#fff}
+.sos-banner p{font-size:13px;color:#ffffff99;margin-top:2px}
+.sos-icon{font-size:36px;color:#fff}
+.vitals-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px}
+.vital-card{background:var(--vf-surface);border:0.5px solid var(--vf-border);border-radius:var(--vf-radius-sm);padding:14px;text-align:center}
+.vital-card .vnum{font-family:'Syne',sans-serif;font-size:22px;font-weight:700}
+.vital-card .vlabel{font-size:11px;color:var(--vf-muted);margin-top:4px}
+.vital-card.ok .vnum{color:var(--vf-accent)}
+.vital-card.warn .vnum{color:var(--vf-warn)}
+.vital-card.danger .vnum{color:var(--vf-danger)}
+
+/* MYTH BUSTER */
+.claim-row{display:flex;gap:8px;padding:0 14px 12px}
+.claim-input{flex:1;background:var(--vf-surface2);border:0.5px solid var(--vf-border2);border-radius:var(--vf-radius-sm);padding:10px 14px;font-size:14px;color:var(--vf-text);font-family:'DM Sans',sans-serif;outline:none}
+.claim-input:focus{border-color:var(--vf-accent)}
+.check-btn{background:var(--vf-surface2);border:0.5px solid var(--vf-border2);border-radius:var(--vf-radius-sm);padding:10px 16px;color:var(--vf-text);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:.2s}
+.check-btn:hover{border-color:var(--vf-accent);color:var(--vf-accent)}
+.verdict-badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+.verdict-badge.verified{background:#00e5a025;color:var(--vf-accent);border:0.5px solid var(--vf-accent)}
+.verdict-badge.misleading{background:#fbbf2425;color:var(--vf-warn);border:0.5px solid var(--vf-warn)}
+.verdict-badge.false{background:#ff4d6d25;color:var(--vf-danger);border:0.5px solid var(--vf-danger)}
+
+/* TOXICITY */
+.tox-bar{height:8px;border-radius:4px;background:var(--vf-surface2);overflow:hidden;margin:8px 0 4px}
+.tox-fill{height:100%;border-radius:4px;transition:.5s}
+.tox-low{background:var(--vf-accent)}
+.tox-med{background:var(--vf-warn)}
+.tox-high{background:var(--vf-danger)}
+
+/* SOS MODAL */
+.overlay{display:none;position:fixed;inset:0;background:#000000aa;z-index:999;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:var(--vf-surface);border:0.5px solid var(--vf-danger);border-radius:var(--vf-radius);max-width:500px;width:90%;padding:28px;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--vf-danger);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.sos-msg-block{background:var(--vf-surface2);border:0.5px solid var(--vf-border);border-radius:var(--vf-radius-sm);padding:14px;font-size:13px;line-height:1.7;margin-bottom:12px}
+.sos-msg-block .label{font-size:11px;font-weight:700;color:var(--vf-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+.modal-btns{display:flex;gap:10px;margin-top:16px}
+.modal-btn{flex:1;padding:12px;border-radius:var(--vf-radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;border:none}
+.modal-btn.primary{background:var(--vf-danger);color:#fff}
+.modal-btn.secondary{background:var(--vf-surface2);color:var(--vf-text);border:0.5px solid var(--vf-border2)}
+.close-modal{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--vf-muted);cursor:pointer;font-size:18px}
+
+/* BACK BTN */
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--vf-muted);cursor:pointer;margin-bottom:20px;padding:6px 12px;border-radius:var(--vf-radius-sm);border:0.5px solid var(--vf-border);background:none;font-family:'DM Sans',sans-serif;transition:.2s}
+.back-btn:hover{color:var(--vf-text);border-color:var(--vf-border2)}
+
+/* STREAK */
+.streak-grid{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.streak-day{width:36px;height:36px;border-radius:var(--vf-radius-sm);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:0.5px solid var(--vf-border)}
+.streak-day.done{background:var(--vf-accent);color:#0a0b0e;border-color:var(--vf-accent)}
+.streak-day.today{border-color:var(--vf-accent2);color:var(--vf-accent2)}
+
+/* PROGRESS BAR */
+.prog-bar{height:6px;border-radius:3px;background:var(--vf-surface2);overflow:hidden;margin:8px 0}
+.prog-fill{height:100%;border-radius:3px;background:var(--vf-accent);transition:.4s}
+
+/* CYCLE PHASE */
+.phase-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;margin-right:8px;margin-bottom:8px}
+.phase-pill.menstrual{background:#ff4d6d20;color:var(--vf-danger);border:0.5px solid var(--vf-danger)}
+.phase-pill.follicular{background:#fbbf2420;color:var(--vf-warn);border:0.5px solid var(--vf-warn)}
+.phase-pill.ovulatory{background:#00e5a020;color:var(--vf-accent);border:0.5px solid var(--vf-accent)}
+.phase-pill.luteal{background:#a78bfa20;color:var(--vf-purple);border:0.5px solid var(--vf-purple)}
+
+/* ACCORDION */
+.accordion{border:0.5px solid var(--vf-border);border-radius:var(--vf-radius-sm);overflow:hidden;margin-bottom:10px}
+.accordion-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;font-size:14px;font-weight:500;background:var(--vf-surface)}
+.accordion-header:hover{background:var(--vf-surface2)}
+.accordion-body{display:none;padding:14px 16px;font-size:13px;line-height:1.7;color:var(--vf-muted);border-top:0.5px solid var(--vf-border);background:var(--vf-surface2)}
+.accordion.open .accordion-body{display:block}
+.accordion.open .accordion-header i.chevron{transform:rotate(180deg)}
+.accordion-header i.chevron{transition:.2s}
+
+/* COGNITIVE CHECK */
+.quiz-question{background:var(--vf-surface);border:0.5px solid var(--vf-border);border-radius:var(--vf-radius);padding:20px;margin-bottom:16px}
+.quiz-question h4{font-size:15px;font-weight:600;margin-bottom:14px}
+.quiz-opts{display:flex;flex-wrap:wrap;gap:8px}
+.quiz-opt{padding:8px 16px;border-radius:20px;border:0.5px solid var(--vf-border2);font-size:13px;cursor:pointer;transition:.2s;background:var(--vf-surface2);color:var(--vf-text);font-family:'DM Sans',sans-serif}
+.quiz-opt:hover{border-color:var(--vf-accent);color:var(--vf-accent)}
+.quiz-opt.correct{border-color:var(--vf-accent);background:#00e5a020;color:var(--vf-accent)}
+.quiz-opt.wrong{border-color:var(--vf-danger);background:#ff4d6d20;color:var(--vf-danger)}
+
+/* BREATHING */
+.breath-circle{width:120px;height:120px;border-radius:50%;border:3px solid var(--vf-accent);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--vf-accent);margin:20px auto;transition:transform 4s ease,opacity 4s ease}
+.breath-circle.inhale{transform:scale(1.3);opacity:1}
+.breath-circle.exhale{transform:scale(1);opacity:.7}
+.breath-label{text-align:center;font-size:14px;color:var(--vf-muted);margin-bottom:12px}
+
+/* BOX BREATHING BTN */
+.breath-start-btn{display:block;margin:0 auto;background:var(--vf-surface2);border:0.5px solid var(--vf-accent);border-radius:var(--vf-radius-sm);padding:10px 28px;font-size:14px;font-weight:600;color:var(--vf-accent);cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s}
+.breath-start-btn:hover{background:var(--vf-accent);color:#0a0b0e}
+
+/* MICRONUTRIENT BADGES */
+.nutri-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:12px;background:var(--vf-surface2);border:0.5px solid var(--vf-border);margin:2px;color:var(--vf-muted)}
+
+.hide{display:none!important}
+.bold{font-weight:700}
+.accent{color:var(--vf-accent)}
+.muted{color:var(--vf-muted);font-size:13px}
+hr.vf-divider{border:none;border-top:0.5px solid var(--vf-border);margin:20px 0}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">Vital<span>Fit</span></div>
+  <div class="topbar-right">
+    <div class="mode-badge" id="modeBadge" style="display:none"></div>
+    <button class="theme-btn" onclick="toggleTheme()">
+      <i class="ti ti-sun" id="themeIcon"></i>
+      <span id="themeLabel">Light</span>
+    </button>
+  </div>
+</div>
+
+<!-- GATEWAY SCREEN -->
+<div class="screen active" id="screen-gateway">
+  <div class="gateway-hero">
+    <h1>Your Personal<br><em>Health OS</em></h1>
+    <p>Select your gateway profile to initialize your personalized VitalFit experience.</p>
+  </div>
+  <div class="profile-cards">
+    <div class="profile-card senior" onclick="setMode('SENIOR')">
+      <span class="select-badge">Activate</span>
+      <i class="ti ti-heart-handshake card-icon" style="font-size:32px"></i>
+      <h3>Senior Citizen</h3>
+      <p>Accessible wellness, govt. benefit integration, cognitive care, vitals tracking & guardian portal.</p>
+    </div>
+    <div class="profile-card adult-male" onclick="setMode('ADULT_MALE')">
+      <span class="select-badge">Activate</span>
+      <i class="ti ti-run card-icon" style="font-size:32px"></i>
+      <h3>Adult — Male</h3>
+      <p>Biohacking, testosterone optimization, 21-Day challenge, product scanner & habit transformation.</p>
+    </div>
+    <div class="profile-card adult-female" onclick="setMode('ADULT_FEMALE')">
+      <span class="select-badge">Activate</span>
+      <i class="ti ti-sparkles card-icon" style="font-size:32px"></i>
+      <h3>Adult — Female</h3>
+      <p>Cycle syncing, micronutrient optimization, aesthetic wellness, govt. schemes & 21-Day challenge.</p>
+    </div>
+    <div class="profile-card" style="border-style:dashed;cursor:default;">
+      <i class="ti ti-info-circle card-icon" style="color:var(--vf-muted)"></i>
+      <h3 style="color:var(--vf-muted)">How It Works</h3>
+      <p>VitalFit's AI core engine dynamically adapts every module, layout, and recommendation to your selected profile and active theme.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SENIOR DASHBOARD -->
+<div class="screen hide" id="screen-senior">
+  <div class="dashboard-layout">
+    <div class="sidebar" id="senior-sidebar">
+      <div class="sidebar-section">Core</div>
+      <div class="sidebar-item active" onclick="showSeniorSection('overview')"><i class="ti ti-layout-dashboard"></i> Overview</div>
+      <div class="sidebar-item" onclick="showSeniorSection('vitals')"><i class="ti ti-activity"></i> Vitals Log</div>
+      <div class="sidebar-item" onclick="showSeniorSection('cognitive')"><i class="ti ti-brain"></i> Cognitive Check</div>
+      <div class="sidebar-section">Support</div>
+      <div class="sidebar-item" onclick="showSeniorSection('ayushman')"><i class="ti ti-shield-check"></i> Ayushman Bharat</div>
+      <div class="sidebar-item" onclick="showSeniorSection('guardian')"><i class="ti ti-users"></i> Guardian Portal</div>
+      <div class="sidebar-item" onclick="showSeniorSection('hobbies')"><i class="ti ti-plant"></i> Hobbies</div>
+      <div class="sidebar-item" onclick="showSeniorSection('ai')"><i class="ti ti-robot"></i> AI Companion</div>
+      <div class="sidebar-section">Emergency</div>
+      <div class="sidebar-item" style="color:var(--vf-danger)" onclick="openSOS()"><i class="ti ti-emergency-bed"></i> SOS Alert</div>
+      <hr class="vf-divider" style="margin:12px 20px">
+      <div class="sidebar-item" onclick="goHome()"><i class="ti ti-arrow-left"></i> Switch Mode</div>
+    </div>
+    <div class="main-content" id="senior-main">
+      <!-- injected dynamically -->
+    </div>
+  </div>
+</div>
+
+<!-- ADULT DASHBOARD -->
+<div class="screen hide" id="screen-adult">
+  <div class="dashboard-layout">
+    <div class="sidebar" id="adult-sidebar">
+      <div class="sidebar-section">Core</div>
+      <div class="sidebar-item active" onclick="showAdultSection('overview')"><i class="ti ti-layout-dashboard"></i> Overview</div>
+      <div class="sidebar-item" onclick="showAdultSection('challenge')"><i class="ti ti-flame"></i> 21-Day Challenge</div>
+      <div class="sidebar-item" onclick="showAdultSection('blueprint')"><i class="ti ti-calendar-time"></i> Daily Blueprint</div>
+      <div class="sidebar-section">Health</div>
+      <div class="sidebar-item" onclick="showAdultSection('scanner')"><i class="ti ti-scan"></i> Product Scanner</div>
+      <div class="sidebar-item" onclick="showAdultSection('nutrients')"><i class="ti ti-leaf"></i> Micronutrients</div>
+      <div class="sidebar-item" onclick="showAdultSection('gendered')"><i class="ti ti-gender-bigender"></i> Gendered Health</div>
+      <div class="sidebar-section">Mind & Social</div>
+      <div class="sidebar-item" onclick="showAdultSection('mental')"><i class="ti ti-mood-smile"></i> Mental Wellness</div>
+      <div class="sidebar-item" onclick="showAdultSection('mythbuster')"><i class="ti ti-bulb"></i> Myth Buster</div>
+      <div class="sidebar-item" onclick="showAdultSection('streaks')"><i class="ti ti-trophy"></i> Friend Streaks</div>
+      <div class="sidebar-item" onclick="showAdultSection('ai')"><i class="ti ti-robot"></i> AI Coach</div>
+      <hr class="vf-divider" style="margin:12px 20px">
+      <div class="sidebar-item" onclick="goHome()"><i class="ti ti-arrow-left"></i> Switch Mode</div>
+    </div>
+    <div class="main-content" id="adult-main">
+      <!-- injected dynamically -->
+    </div>
+  </div>
+</div>
+
+<!-- SOS MODAL -->
+<div class="overlay" id="sos-overlay">
+  <div class="modal" style="position:relative">
+    <button class="close-modal" onclick="closeSOS()"><i class="ti ti-x"></i></button>
+    <h2><i class="ti ti-emergency-bed"></i> SOS EMERGENCY ALERT</h2>
+    <p class="muted" style="margin-bottom:16px">Pre-formatted emergency dispatches are ready. Send immediately to guardians and local emergency services.</p>
+    <div class="sos-msg-block">
+      <div class="label"><i class="ti ti-brand-whatsapp"></i> WhatsApp / SMS Template</div>
+      🚨 EMERGENCY ALERT — VitalFit SOS<br>
+      Patient: [Registered User Name]<br>
+      Location: [GPS: 17.3850° N, 78.4867° E — Hyderabad]<br>
+      Condition: Fall / Chest Pain / Medical Emergency<br>
+      Blood Group: [Registered Blood Group]<br>
+      Known Conditions: [Hypertension, Diabetes — from health profile]<br>
+      Current Medications: [Profile Prescription List]<br>
+      📍 Google Maps: maps.google.com/?q=17.3850,78.4867<br>
+      Contact Guardian: [Guardian 1 Name & Number]
+    </div>
+    <div class="sos-msg-block">
+      <div class="label"><i class="ti ti-mail"></i> Email Alert Template</div>
+      Subject: URGENT — VitalFit Medical SOS for [User Name]<br>
+      Body: Patient profile, location, vitals, medication list and emergency contacts attached. Please respond immediately.
+    </div>
+    <!-- Locate this container in your file and add the onclick action attribute -->
+<div class="modal-btns">
+  <button class="modal-btn primary" onclick="triggerSOSDispatch()"><i class="ti ti-send"></i> Dispatch All Alerts</button>
+  <button class="modal-btn secondary" onclick="closeSOS()">Close</button>
+</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+let activeMode = null;
+let lightMode = false;
+let breathInterval = null;
+let breathStep = 0;
+
+const breathSteps = ['Inhale (4s)', 'Hold (4s)', 'Exhale (4s)', 'Hold (4s)'];
+
+function toggleTheme(){
+  lightMode = !lightMode;
+  document.getElementById('app').classList.toggle('light-mode', lightMode);
+  document.getElementById('themeIcon').className = lightMode ? 'ti ti-moon' : 'ti ti-sun';
+  document.getElementById('themeLabel').textContent = lightMode ? 'Dark' : 'Light';
+}
+
+function goHome(){
+  activeMode = null;
+  document.getElementById('modeBadge').style.display = 'none';
+  showScreen('gateway');
+}
+
+function setMode(mode){
+  activeMode = mode;
+  const badge = document.getElementById('modeBadge');
+  badge.style.display = 'inline-block';
+  const labels = {SENIOR:'Senior Mode',ADULT_MALE:'Adult · Male',ADULT_FEMALE:'Adult · Female'};
+  badge.textContent = labels[mode];
+  if(mode==='SENIOR'){showScreen('senior');renderSeniorSection('overview');}
+  else{showScreen('adult');renderAdultSection('overview');}
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.classList.add('hide');});
+  const s = document.getElementById('screen-'+id);
+  s.classList.remove('hide');
+  s.classList.add('active');
+}
+
+// ---- SENIOR ----
+function showSeniorSection(sec){
+  document.querySelectorAll('#senior-sidebar .sidebar-item').forEach(i=>i.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  renderSeniorSection(sec);
+}
+
+function renderSeniorSection(sec){
+  const el = document.getElementById('senior-main');
+  const sections = {
+    overview: seniorOverview,
+    vitals: seniorVitals,
+    cognitive: seniorCognitive,
+    ayushman: seniorAyushman,
+    guardian: seniorGuardian,
+    hobbies: seniorHobbies,
+    ai: ()=>aiChatHTML('senior','Hi! I am your VitalFit senior companion. Ask me about your medications, nearby hospitals, or how you are feeling today.','[SENIOR MODE] Ask about medications, Ayushman Bharat, hospital lookups, or your health status.')
+  };
+  el.innerHTML = (sections[sec]||seniorOverview)();
+  if(sec==='ai') initChat('senior-ai');
+  if(sec==='cognitive') bindQuiz();
+}
+
+function seniorOverview(){
+  return `<div class="section-title">Good Morning 🌅</div>
+<div class="section-sub">Senior Citizen Mode • High-Contrast Accessible Layout</div>
+<div class="sos-banner" onclick="openSOS()">
+  <i class="ti ti-emergency-bed sos-icon"></i>
+  <div><h3>🚨 SOS Emergency Dispatch</h3><p>Tap to instantly alert guardians, send location & medical profile to emergency contacts.</p></div>
+</div>
+<div class="vitals-grid">
+  <div class="vital-card ok"><div class="vnum">118/76</div><div class="vlabel">Blood Pressure</div></div>
+  <div class="vital-card ok"><div class="vnum">72 bpm</div><div class="vlabel">Heart Rate</div></div>
+  <div class="vital-card warn"><div class="vnum">6.8%</div><div class="vlabel">HbA1c</div></div>
+  <div class="vital-card ok"><div class="vnum">98%</div><div class="vlabel">SpO2</div></div>
+  <div class="vital-card ok"><div class="vnum">36.7°C</div><div class="vlabel">Temperature</div></div>
+  <div class="vital-card warn"><div class="vnum">19</div><div class="vlabel">BMI</div></div>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-pill"></i> Today's Medication Schedule</h4>
+  <table class="vf-table"><thead><tr><th>Medication</th><th>Dose</th><th>Time</th><th>Status</th></tr></thead>
+  <tbody>
+  <tr><td>Metformin 500mg</td><td>1 tablet</td><td>08:00 AM</td><td><span class="verdict-badge verified">Taken</span></td></tr>
+  <tr><td>Amlodipine 5mg</td><td>1 tablet</td><td>08:00 AM</td><td><span class="verdict-badge verified">Taken</span></td></tr>
+  <tr><td>Vitamin D3 1000IU</td><td>1 softgel</td><td>01:00 PM</td><td><span class="verdict-badge misleading">Pending</span></td></tr>
+  <tr><td>Calcium + Mg</td><td>1 tablet</td><td>09:00 PM</td><td><span class="verdict-badge misleading">Pending</span></td></tr>
+  </tbody></table>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-map-pin"></i> Wandering / Geolocation Monitor</h4>
+  <p class="muted" style="margin-bottom:10px">Daily routine pattern: Home (06:00–09:00) → Park (09:00–10:30) → Home (10:30–18:00)</p>
+  <div style="background:var(--vf-surface2);border-radius:var(--vf-radius-sm);padding:12px;font-size:13px;display:flex;align-items:center;gap:10px;border:0.5px solid var(--vf-border)">
+    <i class="ti ti-circle-check" style="color:var(--vf-accent);font-size:20px"></i>
+    <span>Current location is <strong>within expected daily parameters</strong>. No anomalies detected.</span>
+  </div>
+</div>`;
+}
+
+function seniorVitals(){
+  return `<div class="section-title">Vitals Log</div>
+<div class="section-sub">Guardian-readable health data sheet</div>
+<div class="vitals-grid">
+  <div class="vital-card ok"><div class="vnum">118/76</div><div class="vlabel">Blood Pressure (mmHg)</div></div>
+  <div class="vital-card ok"><div class="vnum">72 bpm</div><div class="vlabel">Heart Rate</div></div>
+  <div class="vital-card warn"><div class="vnum">6.8%</div><div class="vlabel">HbA1c (⚠️ Monitor)</div></div>
+  <div class="vital-card ok"><div class="vnum">98%</div><div class="vlabel">SpO2 Saturation</div></div>
+  <div class="vital-card ok"><div class="vnum">36.7°C</div><div class="vlabel">Temperature</div></div>
+  <div class="vital-card ok"><div class="vnum">19 BMI</div><div class="vlabel">Body Mass Index</div></div>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-clipboard-list"></i> 7-Day BP Trend</h4>
+  <table class="vf-table"><thead><tr><th>Date</th><th>Systolic</th><th>Diastolic</th><th>Pulse</th><th>Flag</th></tr></thead>
+  <tbody>
+  <tr><td>Today</td><td>118</td><td>76</td><td>72</td><td><span class="verdict-badge verified">Normal</span></td></tr>
+  <tr><td>Yesterday</td><td>122</td><td>80</td><td>74</td><td><span class="verdict-badge verified">Normal</span></td></tr>
+  <tr><td>3 Days Ago</td><td>135</td><td>88</td><td>78</td><td><span class="verdict-badge misleading">Elevated</span></td></tr>
+  <tr><td>4 Days Ago</td><td>141</td><td>92</td><td>82</td><td><span class="verdict-badge false">High</span></td></tr>
+  </tbody></table>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-users"></i> Export to Guardian Portal</h4>
+  <p class="muted">Full exportable health summary ready for family/caregiver. Includes prescriptions, vitals history, diagnostic notes.</p>
+  <button onclick="alert('📋 Health sheet exported and shared with Guardian 1 & Guardian 2 via WhatsApp and Email.')" style="margin-top:12px;background:var(--vf-accent);border:none;border-radius:var(--vf-radius-sm);padding:10px 20px;color:#0a0b0e;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">Export Health Sheet</button>
+</div>`;
+}
+
+function seniorCognitive(){
+  return `<div class="section-title">Cognitive Check-in</div>
+<div class="section-sub">Daily 3-question memory baseline assessment</div>
+<div class="quiz-question" id="cq1">
+  <h4>🗓️ Q1 — Date & Day Verification</h4>
+  <p class="muted" style="margin-bottom:12px">What day of the week is it today?</p>
+  <div class="quiz-opts">
+    <button class="quiz-opt" onclick="answerQ('cq1',this,true)">Monday</button>
+    <button class="quiz-opt" onclick="answerQ('cq1',this,false)">Tuesday</button>
+    <button class="quiz-opt" onclick="answerQ('cq1',this,false)">Wednesday</button>
+    <button class="quiz-opt" onclick="answerQ('cq1',this,false)">Thursday</button>
+  </div>
+</div>
+<div class="quiz-question" id="cq2">
+  <h4>🔷 Q2 — Shape Recollection</h4>
+  <p class="muted" style="margin-bottom:12px">Yesterday's brain training showed a sequence: Circle, Square, Triangle, ___</p>
+  <div class="quiz-opts">
+    <button class="quiz-opt" onclick="answerQ('cq2',this,false)">Circle</button>
+    <button class="quiz-opt" onclick="answerQ('cq2',this,true)">Pentagon</button>
+    <button class="quiz-opt" onclick="answerQ('cq2',this,false)">Star</button>
+    <button class="quiz-opt" onclick="answerQ('cq2',this,false)">Diamond</button>
+  </div>
+</div>
+<div class="quiz-question" id="cq3">
+  <h4>🎨 Q3 — Word Association</h4>
+  <p class="muted" style="margin-bottom:12px">Complete: "Water is to River as Wind is to ___"</p>
+  <div class="quiz-opts">
+    <button class="quiz-opt" onclick="answerQ('cq3',this,false)">Rain</button>
+    <button class="quiz-opt" onclick="answerQ('cq3',this,true)">Air</button>
+    <button class="quiz-opt" onclick="answerQ('cq3',this,false)">Storm</button>
+    <button class="quiz-opt" onclick="answerQ('cq3',this,false)">Cloud</button>
+  </div>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-brain"></i> Cognitive Baseline Status</h4>
+  <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <div class="stat-card accent-green" style="flex:1;min-width:120px"><div class="label">Memory Score</div><div class="value accent">8.2<span style="font-size:14px;font-weight:400">/10</span></div><div class="sub">Above baseline</div></div>
+    <div class="stat-card accent-blue" style="flex:1;min-width:120px"><div class="label">Check-in Streak</div><div class="value">12 days</div><div class="sub">Consistent</div></div>
+    <div class="stat-card accent-warn" style="flex:1;min-width:120px"><div class="label">Drift Flag</div><div class="value" style="font-size:18px">None</div><div class="sub">No anomalies</div></div>
+  </div>
+</div>`;
+}
+
+function bindQuiz(){
+  // quiz opts click handled inline
+}
+function answerQ(qid, btn, correct){
+  const q = document.getElementById(qid);
+  if(q.dataset.answered) return;
+  q.dataset.answered = true;
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if(!correct){
+    const opts = q.querySelectorAll('.quiz-opt');
+    opts.forEach(o=>{if(o!==btn) o.classList.add('correct'); return;});
+    q.querySelectorAll('.quiz-opt').forEach(o=>{const isCorrect=o.classList.contains('correct');if(!isCorrect&&o!==btn)return;});
+  }
+}
+
+function seniorAyushman(){
+  return `<div class="section-title">🛡️ Ayushman Bharat — PM-JAY</div>
+<div class="section-sub">Govt. Welfare Engine · Eligibility · Claim Processing</div>
+<div class="card-grid">
+  <div class="stat-card accent-green"><div class="label">Coverage Limit</div><div class="value accent">₹5L</div><div class="sub">Per family per year</div></div>
+  <div class="stat-card accent-blue"><div class="label">Empanelled Hospitals</div><div class="value">23,000+</div><div class="sub">Across India</div></div>
+  <div class="stat-card accent-warn"><div class="label">Conditions Covered</div><div class="value">1,929</div><div class="sub">Procedures</div></div>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-check"></i> Your Eligibility Status</h4>
+  <div style="display:flex;align-items:center;gap:10px;padding:14px;background:var(--vf-surface2);border-radius:var(--vf-radius-sm);border:0.5px solid var(--vf-accent)">
+    <i class="ti ti-shield-check" style="color:var(--vf-accent);font-size:24px"></i>
+    <div><div style="font-weight:700;color:var(--vf-accent)">ELIGIBLE — Active Beneficiary</div><div class="muted">PMJAY ID: XXXX-XXXX-XXXX verified</div></div>
+  </div>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-map-pin"></i> Nearby Empanelled Hospitals — Hyderabad</h4>
+  <table class="vf-table"><thead><tr><th>Hospital</th><th>Speciality</th><th>Distance</th><th>Status</th></tr></thead>
+  <tbody>
+  <tr><td>NIMS Hospital</td><td>Multi-Speciality</td><td>3.2 km</td><td><span class="verdict-badge verified">Open</span></td></tr>
+  <tr><td>Osmania General</td><td>Cardiology, General</td><td>5.1 km</td><td><span class="verdict-badge verified">Open</span></td></tr>
+  <tr><td>Care Hospital Banjara Hills</td><td>Ortho, Neuro</td><td>7.4 km</td><td><span class="verdict-badge verified">Open</span></td></tr>
+  </tbody></table>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-list-check"></i> Claim Processing Steps</h4>
+  <div class="timeline">
+    <div class="timeline-item"><div class="tl-icon morning"><i class="ti ti-id"></i></div><div class="tl-content"><div class="tl-time">Step 1</div><div class="tl-desc">Carry Aadhaar card, Ration card or PM-JAY e-card to empanelled hospital.</div></div></div>
+    <div class="timeline-item"><div class="tl-icon noon"><i class="ti ti-building-hospital"></i></div><div class="tl-content"><div class="tl-time">Step 2</div><div class="tl-desc">Approach Ayushman Mitra at the hospital helpdesk. They will verify eligibility on the spot.</div></div></div>
+    <div class="timeline-item"><div class="tl-icon midday"><i class="ti ti-clipboard-list"></i></div><div class="tl-content"><div class="tl-time">Step 3</div><div class="tl-desc">Treatment is pre-authorized electronically. Zero out-of-pocket expense for covered procedures.</div></div></div>
+    <div class="timeline-item"><div class="tl-icon evening"><i class="ti ti-file-invoice"></i></div><div class="tl-content"><div class="tl-time">Step 4</div><div class="tl-desc">Post-discharge, the hospital submits the claim directly to the insurer. You receive no bill.</div></div></div>
+  </div>
+</div>`;
+}
+
+function seniorGuardian(){
+  return `<div class="section-title">Guardian Portal</div>
+<div class="section-sub">Read/Write health summary — shareable with family & caregivers</div>
+<div class="feature-block">
+  <h4><i class="ti ti-user-circle"></i> Patient Profile</h4>
+  <table class="vf-table">
+  <tr><td style="color:var(--vf-muted);width:140px">Full Name</td><td>[Registered User Name]</td></tr>
+  <tr><td style="color:var(--vf-muted)">Age</td><td>68 years</td></tr>
+  <tr><td style="color:var(--vf-muted)">Blood Group</td><td>O+</td></tr>
+  <tr><td style="color:var(--vf-muted)">PMJAY ID</td><td>XXXX-XXXX-XXXX</td></tr>
+  <tr><td style="color:var(--vf-muted)">Primary Doctor</td><td>Dr. Ramesh Rao — NIMS, Hyderabad</td></tr>
+  <tr><td style="color:var(--vf-muted)">Emergency Contact</td><td>Guardian 1: [Name] — [Number]</td></tr>
+  </table>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-stethoscope"></i> Chronic Conditions & Prescriptions</h4>
+  <table class="vf-table"><thead><tr><th>Condition</th><th>Medication</th><th>Dose</th><th>Frequency</th></tr></thead>
+  <tbody>
+  <tr><td>Type 2 Diabetes</td><td>Metformin 500mg</td><td>1 tab</td><td>Twice daily</td></tr>
+  <tr><td>Hypertension</td><td>Amlodipine 5mg</td><td>1 tab</td><td>Once daily AM</td></tr>
+  <tr><td>Vitamin D Deficiency</td><td>Cholecalciferol 1000IU</td><td>1 softgel</td><td>Once daily PM</td></tr>
+  <tr><td>Osteoporosis Risk</td><td>Calcium + Magnesium</td><td>1 tab</td><td>Once daily night</td></tr>
+  </tbody></table>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-chart-bar"></i> Medication Adherence — Last 30 Days</h4>
+  <div style="font-size:13px;margin-bottom:8px;color:var(--vf-muted)">Metformin 500mg</div>
+  <div class="prog-bar"><div class="prog-fill" style="width:92%"></div></div>
+  <div style="font-size:13px;color:var(--vf-muted);margin-bottom:4px">92% — Excellent</div>
+  <div style="font-size:13px;margin-bottom:8px;color:var(--vf-muted);margin-top:10px">Amlodipine 5mg</div>
+  <div class="prog-bar"><div class="prog-fill" style="width:87%"></div></div>
+  <div style="font-size:13px;color:var(--vf-muted);margin-bottom:4px">87% — Good</div>
+  <div style="font-size:13px;margin-bottom:8px;color:var(--vf-muted);margin-top:10px">Vitamin D3</div>
+  <div class="prog-bar"><div class="prog-fill" style="width:64%;background:var(--vf-warn)"></div></div>
+  <div style="font-size:13px;color:var(--vf-warn)">64% — ⚠️ Needs Improvement</div>
+</div>`;
+}
+
+function seniorHobbies(){
+  return `<div class="section-title">🌱 Mindful Hobbies</div>
+<div class="section-sub">Low-impact, dexterity-friendly activities curated for seniors</div>
+<div class="accordion open">
+  <div class="accordion-header" onclick="toggleAccordion(this)"><span>🌿 Therapeutic Vertical Gardening</span><i class="ti ti-chevron-down chevron"></i></div>
+  <div class="accordion-body">Start with a small wall-mounted planter near your window. Grow Tulsi, mint, or marigolds. Daily 10-minute care routine builds fine motor skills and reduces cortisol. Recommended pots: 6–8 inch diameter, lightweight plastic to avoid strain.</div>
+</div>
+<div class="accordion">
+  <div class="accordion-header" onclick="toggleAccordion(this)"><span>📚 Guided Indoor Audiobooks</span><i class="ti ti-chevron-down chevron"></i></div>
+  <div class="accordion-body">Platform: LibriVox (free). Start with 20-minute sessions. Stimulates auditory memory and language centers. Recommended genre: regional language fiction or autobiographies for emotional resonance.</div>
+</div>
+<div class="accordion">
+  <div class="accordion-header" onclick="toggleAccordion(this)"><span>🎨 Micro-Crafts (Paper Folding / Bead Threading)</span><i class="ti ti-chevron-down chevron"></i></div>
+  <div class="accordion-body">Begin with basic origami — crane or lotus. Bead threading on thin elastic requires focused hand-eye coordination. 15–20 minutes/day improves dexterity and provides measurable creative output.</div>
+</div>
+<div class="accordion">
+  <div class="accordion-header" onclick="toggleAccordion(this)"><span>🎵 Devotional Music & Light Singing</span><i class="ti ti-chevron-down chevron"></i></div>
+  <div class="accordion-body">Daily vocal engagement for 10–15 minutes. Activates the vagus nerve, improves mood, and creates community bonding. Join a local bhajan group or online session.</div>
+</div>
+<div class="accordion">
+  <div class="accordion-header" onclick="toggleAccordion(this)"><span>🧩 Jigsaw Puzzles (50–100 pieces)</span><i class="ti ti-chevron-down chevron"></i></div>
+  <div class="accordion-body">Builds spatial reasoning and provides a measurable daily achievement. Work on 1 puzzle over a week. Graduate difficulty slowly. Visual memory engagement is a proven Alzheimer's prophylactic.</div>
+</div>`;
+}
+
+// ---- ADULT ----
+function showAdultSection(sec){
+  document.querySelectorAll('#adult-sidebar .sidebar-item').forEach(i=>i.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  renderAdultSection(sec);
+}
+
+function renderAdultSection(sec){
+  const el = document.getElementById('adult-main');
+  const gender = activeMode === 'ADULT_FEMALE' ? 'female' : 'male';
+  const sections = {
+    overview: adultOverview,
+    challenge: adult21Day,
+    blueprint: adultBlueprint,
+    scanner: adultScanner,
+    nutrients: adultNutrients,
+    gendered: ()=>adultGendered(gender),
+    mental: adultMental,
+    mythbuster: adultMythBuster,
+    streaks: adultStreaks,
+    ai: ()=>aiChatHTML('adult-ai','Welcome to VitalFit AI Coach! Ask me to analyze a product, design your meal plan, or start your 21-Day challenge.','[ADULT MODE] Ask about micronutrient plans, product analysis, myth busting, or cycle syncing.')
+  };
+  el.innerHTML = (sections[sec]||adultOverview)();
+  if(sec==='ai') initChat('adult-ai');
+  if(sec==='mental') initBreathing();
+  if(sec==='mythbuster') bindMythBuster();
+  if(sec==='scanner') bindScanner();
+}
+
+function adultOverview(){
+  const g = activeMode==='ADULT_FEMALE';
+  return `<div class="section-title">${g ? '✨ Wellness Dashboard' : '⚡ Performance Dashboard'}</div>
+<div class="section-sub">${g ? 'Adult Female Mode · Aesthetic Wellness' : 'Adult Male Mode · High-Performance Biohacking'} · 21-Day Challenge Active</div>
+<div class="card-grid">
+  <div class="stat-card accent-green"><div class="label"><i class="ti ti-droplet"></i> Hydration</div><div class="value accent">2.4L</div><div class="sub">Target: 3–4L/day</div></div>
+  <div class="stat-card accent-blue"><div class="label"><i class="ti ti-moon"></i> Sleep</div><div class="value">7.2 hrs</div><div class="sub">Target: 7–8 hrs</div></div>
+  <div class="stat-card accent-pink"><div class="label"><i class="ti ti-flame"></i> Challenge Day</div><div class="value" style="color:var(--vf-pink)">Day 8</div><div class="sub">Phase 2 — Momentum</div></div>
+  <div class="stat-card accent-warn"><div class="label"><i class="ti ti-walk"></i> Steps</div><div class="value">7,240</div><div class="sub">Target: 8,000+</div></div>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-chart-line"></i> Weekly Benchmark Compliance</h4>
+  <div style="font-size:13px;margin-bottom:6px;color:var(--vf-muted)">Workout Streak (5–6 days/week)</div>
+  <div class="prog-bar"><div class="prog-fill" style="width:83%"></div></div>
+  <div style="font-size:13px;margin-bottom:6px;color:var(--vf-muted);margin-top:10px">Hydration (3–4L/day)</div>
+  <div class="prog-bar"><div class="prog-fill" style="width:72%;background:var(--vf-warn)"></div></div>
+  <div style="font-size:13px;margin-bottom:6px;color:var(--vf-muted);margin-top:10px">Sleep Quality (7–8 hrs)</div>
+  <div class="prog-bar"><div class="prog-fill" style="width:90%"></div></div>
+  <div style="font-size:13px;color:var(--vf-muted);margin-top:10px">Zero Processed Sugar Compliance</div>
+  <div class="prog-bar"><div class="prog-fill" style="width:95%"></div></div>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-target"></i> Today's Priority Focus</h4>
+  <div class="timeline">
+    <div class="timeline-item"><div class="tl-icon morning"><i class="ti ti-sun"></i></div><div class="tl-content"><div class="tl-time">Morning</div><div class="tl-desc">500ml water on wake · 10 min sunlight · Strength session · Contrast shower</div></div></div>
+    <div class="timeline-item"><div class="tl-icon noon"><i class="ti ti-egg"></i></div><div class="tl-content"><div class="tl-time">Breakfast</div><div class="tl-desc">3 eggs + oats + banana + black coffee (no sugar)</div></div></div>
+    <div class="timeline-item"><div class="tl-icon evening"><i class="ti ti-tea"></i></div><div class="tl-content"><div class="tl-time">04:00 PM</div><div class="tl-desc">Green tea + raw pumpkin seeds + 10 almonds</div></div></div>
+    <div class="timeline-item"><div class="tl-icon night"><i class="ti ti-moon"></i></div><div class="tl-content"><div class="tl-time">10:00 PM</div><div class="tl-desc">Screen lock · Fiction reading · Sleep for growth hormone recovery</div></div></div>
+  </div>
+</div>`;
+}
+
+function adult21Day(){
+  return `<div class="section-title">🔥 21-Day Lifestyle Challenge</div>
+<div class="section-sub">VitalFit Neuro-Plasticity Habit Formation Framework</div>
+<div class="phase-track">
+  <div class="phase-card"><div class="phase-num">1</div><div class="phase-label">Habit Initiation</div><div class="phase-sub">Days 1–7 · The Friction Phase</div></div>
+  <div class="phase-card active-phase"><div class="phase-num">2</div><div class="phase-label">Neurological Consolidation</div><div class="phase-sub">Days 8–14 · The Momentum Phase</div></div>
+  <div class="phase-card"><div class="phase-num">3</div><div class="phase-label">Identity Transformation</div><div class="phase-sub">Days 15–21 · Aesthetic Integration</div></div>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-calendar"></i> Phase 2 — Day 8 Active Now</h4>
+  <p class="muted" style="margin-bottom:14px">Introduce micronutrient pairing. Ramp workout intensity. Enforce digital boundaries. Neurological pathways are consolidating.</p>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;font-weight:600">Phase Progress</span><span class="muted">8 / 14 days</span></div>
+  <div class="prog-bar" style="height:10px"><div class="prog-fill" style="width:57%"></div></div>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-calendar-check"></i> Day Completion Grid</h4>
+  <div class="streak-grid">
+    ${Array.from({length:21},(_,i)=>{
+      const done=i<7;const today=i===7;
+      return `<div class="streak-day ${done?'done':today?'today':''}">${i+1}</div>`;
+    }).join('')}
+  </div>
+  <p class="muted" style="margin-top:10px">Day 8 is active. Days 1–7 complete. Days 9–21 unlocked progressively.</p>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-target"></i> Phase 2 Focus Targets</h4>
+  <table class="vf-table"><thead><tr><th>Target</th><th>Metric</th><th>Status</th></tr></thead>
+  <tbody>
+  <tr><td>Micronutrient Pairing</td><td>Iron + Vitamin C at lunch</td><td><span class="verdict-badge verified">Active</span></td></tr>
+  <tr><td>Workout Intensity Ramp</td><td>+15% progressive overload</td><td><span class="verdict-badge verified">Active</span></td></tr>
+  <tr><td>Screen-free after 9 PM</td><td>Digital boundary enforced</td><td><span class="verdict-badge misleading">Partial</span></td></tr>
+  <tr><td>Hydration Target</td><td>3.5L/day minimum</td><td><span class="verdict-badge verified">On Track</span></td></tr>
+  </tbody></table>
+</div>`;
+}
+
+function adultBlueprint(){
+  return `<div class="section-title">🗓️ Daily Blueprint</div>
+<div class="section-sub">High-Performance Standard Template · Phase 2 Active</div>
+<div class="timeline">
+  <div class="timeline-item"><div class="tl-icon morning"><i class="ti ti-sun"></i></div><div class="tl-content"><div class="tl-time">05:30 AM — 08:00 AM · Morning Block</div><div class="tl-desc">500ml pure water on wake → 10 min morning sunlight + light mobility → Structured workout (Strength/Yoga/Cardio) → Contrast shower (Hot 60s → Cold 30s)</div></div></div>
+  <div class="timeline-item"><div class="tl-icon noon"><i class="ti ti-brain"></i></div><div class="tl-content"><div class="tl-time">08:00 AM — 12:00 PM · Nutrition & Deep Focus</div><div class="tl-desc">High-protein breakfast: 3 eggs + rolled oats + seasonal fruits → Deep work focus blocks (Pomodoro 25/5) → No social media before 10 AM</div></div></div>
+  <div class="timeline-item"><div class="tl-icon midday"><i class="ti ti-scale"></i></div><div class="tl-content"><div class="tl-time">12:00 PM — 02:00 PM · Mid-Day Balance</div><div class="tl-desc">Hydration check (1L minimum by noon) → Balanced lunch: complex carbs + lean protein + high-fiber greens + raw salad → 15-min power nap or Zone-1 walk</div></div></div>
+  <div class="timeline-item"><div class="tl-icon evening"><i class="ti ti-trees"></i></div><div class="tl-content"><div class="tl-time">02:00 PM — 07:00 PM · Evening Wellness</div><div class="tl-desc">Creative work / skill acquisition → 04:00 PM green tea + raw nuts/seeds → 05:30 PM outdoor functional movement (brisk walk, cycling, sports)</div></div></div>
+  <div class="timeline-item"><div class="tl-icon night"><i class="ti ti-moon"></i></div><div class="tl-content"><div class="tl-time">07:00 PM — 10:00 PM · Wind Down</div><div class="tl-desc">Light digestible dinner → Zero screens after 09:00 PM → Fiction reading / restorative hobbies → 10:00 PM sleep lock — growth hormone recovery window</div></div></div>
+</div>
+<hr class="vf-divider">
+<div class="feature-block">
+  <h4><i class="ti ti-chart-bar"></i> Weekly Benchmarks · Non-Negotiable</h4>
+  <table class="vf-table"><thead><tr><th>Metric</th><th>Target</th></tr></thead>
+  <tbody>
+  <tr><td>Workout Frequency</td><td>5–6 days/week structured split</td></tr>
+  <tr><td>Active Recovery</td><td>1 mandatory rest/recovery day</td></tr>
+  <tr><td>Daily Water Intake</td><td>3–4 liters</td></tr>
+  <tr><td>Sleep Duration</td><td>7–8 hours tracked</td></tr>
+  <tr><td>Posture Awareness</td><td>Upright posture reminders every 45 min</td></tr>
+  <tr><td>Processed Sugar</td><td>Absolute zero tolerance</td></tr>
+  <tr><td>Carbonated Soft Drinks</td><td>Zero tolerance</td></tr>
+  </tbody></table>
+</div>`;
+}
+
+function adultScanner(){
+  return `<div class="section-title">🔬 Product Scanner</div>
+<div class="section-sub">Ingredient harm assessment · Toxicity scoring · Clean alternatives</div>
+<div class="feature-block">
+  <h4><i class="ti ti-scan"></i> Analyze Product Ingredients</h4>
+  <textarea id="ingredientInput" placeholder="Paste ingredient list here... e.g. Sodium Lauryl Sulfate, Parabens, Fragrance, Titanium Dioxide, PEG-100 Stearate..." style="width:100%;background:var(--vf-surface2);border:0.5px solid var(--vf-border2);border-radius:var(--vf-radius-sm);padding:12px;font-size:13px;color:var(--vf-text);font-family:inherit;min-height:90px;resize:vertical;outline:none;line-height:1.6"></textarea>
+  <button onclick="runScanner()" style="margin-top:10px;background:var(--vf-accent);border:none;border-radius:var(--vf-radius-sm);padding:10px 24px;color:#0a0b0e;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px"><i class="ti ti-search"></i> Analyze</button>
+</div>
+<div id="scanner-result"></div>`;
+}
+
+function bindScanner(){
+  window.runScanner = function(){
+    const val = document.getElementById('ingredientInput').value.trim();
+    const el = document.getElementById('scanner-result');
+    if(!val){el.innerHTML='<p class="muted">Please paste ingredient list above.</p>';return;}
+    const score = val.toLowerCase().includes('parabens')||val.toLowerCase().includes('sulfate')||val.toLowerCase().includes('peg')?7:3;
+    const color = score>4?'var(--vf-danger)':score>2?'var(--vf-warn)':'var(--vf-accent)';
+    el.innerHTML = `<div class="feature-block">
+      <h4><i class="ti ti-alert-triangle" style="color:${color}"></i> Toxicity Assessment</h4>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px">
+        <div style="font-family:'Syne',sans-serif;font-size:48px;font-weight:800;color:${color}">${score}</div>
+        <div><div style="font-size:13px;font-weight:700;color:${color}">${score>4?'HIGH RISK':'LOW RISK'} · Score ${score}/10</div><div class="muted">${score>4?'Endocrine disruptors and suspected carcinogens detected.':'Profile appears relatively clean.'}</div></div>
+      </div>
+      <div class="tox-bar"><div class="tox-fill ${score>4?'tox-high':score>2?'tox-med':'tox-low'}" style="width:${score*10}%"></div></div>
+      ${score>4?`<p class="muted" style="margin-top:12px;margin-bottom:12px">⚠️ Toxicity Score above 4 — mandatory clean alternatives:</p>
+      <table class="vf-table"><thead><tr><th>Alternative</th><th>Why Better</th><th>Availability</th></tr></thead>
+      <tbody>
+      <tr><td>Biotique Bio Honey Gel</td><td>Plant-based, paraben-free, SLES-free</td><td>Amazon, Nykaa</td></tr>
+      <tr><td>Mamaearth Vitamin C Face Wash</td><td>No SLS, no parabens, certified toxin-free</td><td>Mamaearth.in, Flipkart</td></tr>
+      <tr><td>WOW Skin Science Face Wash</td><td>Sulphate-free, dermatologist tested</td><td>Amazon, Bigbasket</td></tr>
+      </tbody></table>`:'<div style="color:var(--vf-accent);margin-top:12px;font-size:13px">✅ No mandatory substitution required. Product appears low-risk.</div>'}
+    </div>`;
+  }
+}
+
+function adultNutrients(){
+  return `<div class="section-title">🌿 Micronutrient Optimization</div>
+<div class="section-sub">Symptom-mapped whole-food dietary prescriptions</div>
+<div class="feature-block">
+  <h4><i class="ti ti-leaf"></i> Core Biohacking Micronutrient Matrix</h4>
+  <div style="overflow-x:auto"><table class="vf-table"><thead><tr><th>Nutrient</th><th>Biohacking Purpose</th><th>Avoid</th><th>Premium Whole-Food Sources</th></tr></thead>
+  <tbody>
+  <tr><td><strong>Probiotics</strong></td><td>Gut detox, clear skin, metabolic energy, weight loss</td><td>Ultra-processed foods, HFCS, artificial sweeteners</td><td>Kombucha, Kefir, Kimchi, Greek yogurt</td></tr>
+  <tr><td><strong>Vitamin D3</strong></td><td>Bone matrix, metabolic efficiency, mood elevation</td><td>Refined sugars, excess caffeine, high-sodium</td><td>Pasture-raised eggs, UV mushrooms, sardines, wild salmon</td></tr>
+  <tr><td><strong>Iron</strong></td><td>Fatigue elimination, cognitive focus, RBC health</td><td>Alcohol, nitrites, carbonated sugary sodas</td><td>Spinach, sweet potatoes, oysters, black beans</td></tr>
+  <tr><td><strong>Calcium + Magnesium</strong></td><td>Bone density · REM sleep, muscle recovery, blood sugar</td><td>Refined flour, excess salt, hydrogenated fats</td><td>Dark leafy greens, almonds, pumpkin seeds, chia</td></tr>
+  <tr><td><strong>Zinc + Folate</strong></td><td>Libido, immune defense · Skin glow, hormonal balance</td><td>Excess alcohol, non-organic dairy</td><td>Pumpkin seeds, oysters, lentils, asparagus, avocados</td></tr>
+  <tr><td><strong>Biotin + B12 + Omega-3</strong></td><td>Hair growth, skin renewal · Cardioprotection, anti-inflammation</td><td>Trans fats, HFCS, refined seed oils</td><td>Wild salmon, chia seeds, walnuts, grass-fed beef</td></tr>
+  </tbody></table></div>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-search"></i> Symptom → Nutrient Lookup</h4>
+  <div style="display:flex;flex-wrap:wrap;gap:8px">
+    ${[['Fatigue','Iron, B12, Vitamin D3'],['Hair Loss','Biotin, Zinc, Iron'],['Poor Sleep','Magnesium, Calcium'],['Low Mood','Vitamin D3, Omega-3'],['Acne','Probiotics, Zinc'],['Weak Immunity','Zinc, Vitamin D3']].map(([s,n])=>`<button onclick="alert('Nutrient Rx for ${s}: ${n}')" class="chip">${s} →</button>`).join('')}
+  </div>
+</div>`;
+}
+
+function adultGendered(g){
+  if(g==='female'){
+    return `<div class="section-title">♀️ Female Cycle Syncing Engine</div>
+<div class="section-sub">Dynamic adaptation across 4 biological phases</div>
+<div style="margin-bottom:20px">
+  <span class="phase-pill menstrual"><i class="ti ti-circle-filled"></i> Menstrual · Day 1–5</span>
+  <span class="phase-pill follicular"><i class="ti ti-sun"></i> Follicular · Day 6–13</span>
+  <span class="phase-pill ovulatory"><i class="ti ti-star"></i> Ovulatory · Day 14–16</span>
+  <span class="phase-pill luteal"><i class="ti ti-moon"></i> Luteal · Day 17–28</span>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-circle-filled" style="color:var(--vf-danger)"></i> Currently: Menstrual Phase (Day 1–5)</h4>
+  <table class="vf-table"><thead><tr><th>Parameter</th><th>Adaptation</th></tr></thead>
+  <tbody>
+  <tr><td>Caloric Density</td><td>Increase by 200–300 kcal · focus on iron-rich foods</td></tr>
+  <tr><td>Training Intensity</td><td>Low — Yoga, stretching, walking only. Avoid high-impact.</td></tr>
+  <tr><td>Skincare Routine</td><td>Hydrating, barrier-repair focus. Centella, hyaluronic acid, ceramides.</td></tr>
+  <tr><td>Psychological Support</td><td>Journaling, rest without guilt, reduced social commitments.</td></tr>
+  <tr><td>Key Micronutrients</td><td>Iron (spinach + Vitamin C pairing), Magnesium, Omega-3.</td></tr>
+  </tbody></table>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-shield-check"></i> Govt. Welfare Scheme Integration · Female</h4>
+  <table class="vf-table"><thead><tr><th>Scheme</th><th>Benefit</th><th>Eligibility</th></tr></thead>
+  <tbody>
+  <tr><td>Pradhan Mantri Matru Vandana Yojana</td><td>₹5,000 maternity benefit</td><td>Pregnant / lactating women</td></tr>
+  <tr><td>Ayushman Bharat PM-JAY</td><td>₹5L annual health cover</td><td>Economically vulnerable families</td></tr>
+  <tr><td>Janani Suraksha Yojana</td><td>Institutional delivery cash incentive</td><td>BPL pregnant women</td></tr>
+  <tr><td>National Anaemia Control Programme</td><td>Free Iron-Folic Acid supplements</td><td>Women & adolescent girls</td></tr>
+  </tbody></table>
+</div>`;
+  } else {
+    return `<div class="section-title">♂️ Male Vitality Engine</div>
+<div class="section-sub">Natural testosterone optimization · Cardiac health · Spinal performance</div>
+<div class="card-grid">
+  <div class="stat-card accent-green"><div class="label">Natural T-Optimization</div><div class="value accent">On Track</div><div class="sub">Zinc + sleep protocol active</div></div>
+  <div class="stat-card accent-blue"><div class="label">HRV Recovery</div><div class="value">68 ms</div><div class="sub">Good readiness today</div></div>
+  <div class="stat-card accent-warn"><div class="label">Stress Index</div><div class="value">3.1/10</div><div class="sub">Low — well managed</div></div>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-flame"></i> Testosterone Optimization Protocol</h4>
+  <table class="vf-table"><thead><tr><th>Lever</th><th>Action</th><th>Impact</th></tr></thead>
+  <tbody>
+  <tr><td>Sleep Quality</td><td>10 PM sleep lock · dark room · no screens</td><td>70% of daily T is produced in deep sleep</td></tr>
+  <tr><td>Compound Lifts</td><td>Deadlifts, squats, bench press 3x/week</td><td>Acute testosterone surge post-workout</td></tr>
+  <tr><td>Zinc + Vitamin D3</td><td>Pumpkin seeds daily + 20 min sunlight</td><td>Rate-limiting cofactors for T synthesis</td></tr>
+  <tr><td>Cortisol Management</td><td>Box breathing, 1 active recovery day</td><td>Cortisol directly suppresses T production</td></tr>
+  <tr><td>Body Fat %</td><td>Maintain 12–18% BF · avoid excess sugar</td><td>Aromatase enzyme converts T to estrogen in fat tissue</td></tr>
+  </tbody></table>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-spine"></i> Spinal Posture Management</h4>
+  <p class="muted" style="margin-bottom:10px">Tech neck and anterior pelvic tilt are the two most common posture deficits in desk-worker males under 35.</p>
+  <div class="timeline">
+    <div class="timeline-item"><div class="tl-icon morning"><i class="ti ti-rotate"></i></div><div class="tl-content"><div class="tl-time">Morning</div><div class="tl-desc">Cat-cow spine mobility (2 min) + thoracic extension over foam roller</div></div></div>
+    <div class="timeline-item"><div class="tl-icon noon"><i class="ti ti-alarm"></i></div><div class="tl-content"><div class="tl-time">Every 45 min at desk</div><div class="tl-desc">Stand, chin tuck (3 reps), shoulder blade squeeze (5 reps)</div></div></div>
+    <div class="timeline-item"><div class="tl-icon evening"><i class="ti ti-walk"></i></div><div class="tl-content"><div class="tl-time">Evening</div><div class="tl-desc">Hip flexor stretch (60s/side) · glute bridges 3×15 to correct anterior pelvic tilt</div></div></div>
+  </div>
+</div>`;
+  }
+}
+
+function adultMental(){
+  return `<div class="section-title">🧠 Mental Wellness</div>
+<div class="section-sub">Digital detox · Psychological quizzes · Stress modulation</div>
+<div class="feature-block">
+  <h4><i class="ti ti-wind"></i> Box Breathing Protocol · Real-Time Guidance</h4>
+  <p class="muted" style="margin-bottom:14px">4s Inhale → 4s Hold → 4s Exhale → 4s Hold · Repeat 4 cycles</p>
+  <div class="breath-circle" id="breathCircle">Ready</div>
+  <div class="breath-label" id="breathLabel">Press Start to begin guided session</div>
+  <button class="breath-start-btn" id="breathBtn" onclick="toggleBreath()">Start Session</button>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-device-mobile-off"></i> Digital Detox Protocol</h4>
+  <table class="vf-table"><thead><tr><th>Challenge</th><th>Duration</th><th>Mission</th></tr></thead>
+  <tbody>
+  <tr><td>Screen-Free Morning</td><td>First 60 min on wake</td><td>No phone until after morning routine</td></tr>
+  <tr><td>Social Media Window</td><td>Max 2 sessions/day · 20 min each</td><td>Use app timers to enforce</td></tr>
+  <tr><td>Evening Lock</td><td>09:00 PM hard cutoff</td><td>Phone in another room. Offline hobbies only.</td></tr>
+  <tr><td>Full Detox Day</td><td>1 day/week</td><td>Real-world social interaction, nature, reading</td></tr>
+  </tbody></table>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-mood-check"></i> CBT Daily Journaling Prompt</h4>
+  <div style="background:var(--vf-surface2);border:0.5px solid var(--vf-border);border-radius:var(--vf-radius-sm);padding:16px;font-size:14px;line-height:1.8;font-style:italic;color:var(--vf-muted)">
+    "What is one thought that is holding you back today? Write it down, then write what evidence exists that contradicts it. What would you tell a close friend who held this same belief?"
+  </div>
+  <textarea placeholder="Write your journal entry here..." style="width:100%;margin-top:12px;background:var(--vf-surface2);border:0.5px solid var(--vf-border2);border-radius:var(--vf-radius-sm);padding:12px;font-size:13px;color:var(--vf-text);font-family:inherit;min-height:80px;resize:vertical;outline:none"></textarea>
+</div>`;
+}
+
+function initBreathing(){
+  window.breathActive=false;
+  window.breathStep=0;
+  window.breathInterval=null;
+}
+
+window.toggleBreath = function(){
+  const btn=document.getElementById('breathBtn');
+  const circle=document.getElementById('breathCircle');
+  const label=document.getElementById('breathLabel');
+  if(!window.breathActive){
+    window.breathActive=true;btn.textContent='Stop Session';
+    window.breathInterval=setInterval(()=>{
+      const steps=['Inhale','Hold','Exhale','Hold'];
+      const s=window.breathStep%4;
+      circle.textContent=steps[s];
+      label.textContent=`${steps[s]} — 4 seconds`;
+      circle.className='breath-circle '+(s===0||s===1?'inhale':'exhale');
+      window.breathStep++;
+    },4000);
+  }else{
+    window.breathActive=false;btn.textContent='Start Session';
+    clearInterval(window.breathInterval);
+    circle.textContent='Ready';circle.className='breath-circle';
+    label.textContent='Press Start to begin guided session';
+  }
+}
+
+function adultMythBuster(){
+  return `<div class="section-title">🛡️ Myth Buster</div>
+<div class="section-sub">Fact-check engine · Peer-reviewed medical consensus · Viral health claims</div>
+<div class="feature-block">
+  <h4><i class="ti ti-search"></i> Paste a Health Claim to Fact-Check</h4>
+  <div class="chat-area" style="height:360px">
+    <div class="chat-messages" id="myth-msgs">
+      <div class="msg bot"><div class="msg-meta">VitalFit Fact-Check Engine</div>Drop any viral health claim — from TikTok, Instagram Reels, or YouTube Shorts — and get a verdict backed by peer-reviewed medical consensus.</div>
+      <div class="msg bot"><div class="msg-meta">Try asking:</div>"Does drinking lemon water burn fat?" · "Is creatine bad for kidneys?" · "Does eating after 7 PM cause weight gain?"</div>
+    </div>
+    <div class="claim-row">
+      <input class="claim-input" id="myth-input" placeholder="Paste viral health claim here..." onkeydown="if(event.key==='Enter')sendMythCheck()">
+      <button class="check-btn" onclick="sendMythCheck()">Check <i class="ti ti-shield-check"></i></button>
+    </div>
+  </div>
+</div>`;
+}
+
+function bindMythBuster(){
+  window.sendMythCheck = async function(){
+    const input = document.getElementById('myth-input');
+    const msgs = document.getElementById('myth-msgs');
+    const claim = input.value.trim();
+    if(!claim) return;
+    
+    // Clear the input box and append the user's question to the chat container
+    input.value = '';
+    msgs.innerHTML += `<div class="msg user">${claim}</div>`;
+    
+    // Create an animated typing loader state placeholder
+    const typingId = 'myth-typing';
+    msgs.innerHTML += `<div class="msg bot" id="${typingId}"><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+    
+    try {
+      // POST the user's claim to your Node.js backend relay server
+      const res = await fetch('http://localhost:5000/api/mythbuster', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ claim: claim })
+      });
+      
+      const data = await res.json();
+      
+      // Determine the structural color theme based on the AI's exact rating response
+      let verdictClass = 'misleading'; // default orange warning layout state
+      if (data.rating === 'VERIFIED') verdictClass = 'verified';  // green layout accent
+      if (data.rating === 'FALSE') verdictClass = 'false';       // red layout accent
+      
+      // Dynamically reformat the raw response into your custom frontend UI components
+      const htmlResponse = `
+        <div class="msg bot">
+          <span class="verdict-badge ${verdictClass}">${data.rating}</span><br>
+          <strong>Scientific Explanation:</strong> ${data.explanation}
+        </div>
+      `;
+      
+      // Swap out the typing loader with the finished medical verification layout
+      document.getElementById(typingId).outerHTML = htmlResponse;
+    } catch(e) {
+      // Graceful error state if the server goes offline during the hackathon demo
+      document.getElementById(typingId).outerHTML = `<div class="msg bot">⚠️ Verification core is unreachable. Please make sure server.js is actively running on port 5000.</div>`;
+    }
+    
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+}
+
+function adultStreaks(){
+  return `<div class="section-title">🔥 Friend Streaks</div>
+<div class="section-sub">Synchronized health milestone tracking · Snapchat-style accountability</div>
+<div class="card-grid">
+  <div class="stat-card accent-green"><div class="label">Active Streaks</div><div class="value accent">3</div><div class="sub">Friends connected</div></div>
+  <div class="stat-card accent-pink"><div class="label">Your Best Streak</div><div class="value" style="color:var(--vf-pink)">12 days</div><div class="sub">With Priya</div></div>
+  <div class="stat-card accent-blue"><div class="label">Challenges Won</div><div class="value">7</div><div class="sub">This month</div></div>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-users"></i> Active Friend Challenges</h4>
+  <table class="vf-table"><thead><tr><th>Friend</th><th>Challenge</th><th>Streak</th><th>Status</th></tr></thead>
+  <tbody>
+  <tr><td>Priya K.</td><td>Morning Hydration (500ml)</td><td>🔥 12 days</td><td><span class="verdict-badge verified">Active</span></td></tr>
+  <tr><td>Rahul M.</td><td>21-Day Challenge · Phase Sync</td><td>🔥 8 days</td><td><span class="verdict-badge verified">Active</span></td></tr>
+  <tr><td>Aisha T.</td><td>Digital Detox After 9PM</td><td>🔥 5 days</td><td><span class="verdict-badge misleading">At Risk</span></td></tr>
+  </tbody></table>
+</div>
+<div class="feature-block">
+  <h4><i class="ti ti-plus"></i> Start New Challenge</h4>
+  <div style="display:flex;flex-wrap:wrap;gap:8px">
+    ${['Morning Sunlight Check','Simultaneous Hydration','Screen-Free Evening','21-Day Phase Validation','Active Recovery Day'].map(c=>`<button onclick="alert('Challenge invite sent!')" class="chip">${c} + Invite</button>`).join('')}
+  </div>
+</div>`;
+}
+
+// AI CHAT
+function aiChatHTML(id, welcome, placeholder){
+  return `<div class="section-title"><i class="ti ti-robot" style="color:var(--vf-accent)"></i> AI ${activeMode==='SENIOR'?'Companion':'Coach'}</div>
+<div class="section-sub">Powered by VitalFit Core AI Engine</div>
+<div class="chat-area" style="height:520px">
+  <div class="chat-messages" id="${id}-msgs">
+    <div class="msg bot"><div class="msg-meta">VitalFit AI</div>${welcome}</div>
+  </div>
+  <div class="chip-row" id="${id}-chips"></div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="${id}-input" placeholder="${placeholder}" onkeydown="if(event.key==='Enter')sendChat('${id}')">
+    <button class="send-btn" onclick="sendChat('${id}')"><i class="ti ti-send"></i> Send</button>
+  </div>
+</div>`;
+}
+
+function initChat(id){
+  const chips = activeMode==='SENIOR'
+    ?['Check my medications','Nearby hospitals in Hyderabad','Alzheimer\'s brain game','Ayushman Bharat eligibility']
+    :['Analyze: Sodium Lauryl Sulfate, Parabens','Design my meal plan for iron deficiency','Start Day 8 of 21-Day challenge','Is creatine safe?'];
+  const chipRow = document.getElementById(id+'-chips');
+  if(chipRow) chipRow.innerHTML = chips.map(c=>`<button class="chip" onclick="fillChip('${id}','${c}')">${c}</button>`).join('');
+}
+
+window.fillChip = function(id, text){
+  document.getElementById(id+'-input').value=text;
+  document.getElementById(id+'-input').focus();
+}
+
+window.sendChat = async function(id) {
+  const input = document.getElementById(id + '-input');
+  const msgs = document.getElementById(id + '-msgs');
+  const text = input.value.trim();
+  if (!text) return;
+
+  // Clear input box and append user message to the UI layout
+  input.value = '';
+  msgs.innerHTML += `<div class="msg user">${text}</div>`;
+  
+  // Create a loading state (typing dots animation)
+  const typingId = `${id}-typing`;
+  msgs.innerHTML += `<div class="msg bot" id="${typingId}"><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    // Target your local Node/Express backend relay server directly
+    const res = await fetch('http://localhost:5000/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: text,
+        contextMode: activeMode // Sends 'SENIOR', 'ADULT_MALE', or 'ADULT_FEMALE' dynamically!
+      })
+    });
+
+    const data = await res.json();
+    
+    // Safely parse raw text layout blocks into HTML strings for the UI
+    const reply = data.reply.replace(/\n/g, '<br>')
+                             .replace(/\*\*(.*?)\*\//g, '<strong>$1</strong>')
+                             .replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    // Swap the typing dots animation layout container with the actual AI response
+    document.getElementById(typingId).outerHTML = `<div class="msg bot">${reply}</div>`;
+  } catch (e) {
+    // Gracefully fallback layout check if local server isn't running
+    document.getElementById(typingId).outerHTML = `<div class="msg bot">Connection error. Please verify your local Node server is running on port 5000.</div>`;
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+} 
+function openSOS(){document.getElementById('sos-overlay').classList.add('open');}
+function closeSOS(){document.getElementById('sos-overlay').classList.remove('open');}
+async function triggerSOSAlert() {
+  // We'll create a text area container dynamically within the open modal to show feedback
+  const overlayContent = document.querySelector('#sos-overlay .sos-card') || document.getElementById('sos-overlay');
+  
+  // Save original HTML state so we can restore it when closed
+  if (!window.originalSOSHTML) {
+    window.originalSOSHTML = overlayContent.innerHTML;
+  }
+  
+  overlayContent.innerHTML = `
+    <div style="text-align: center; padding: 20px;">
+      <div class="typing" style="margin-bottom: 20px; justify-content: center;">
+        <div class="dot" style="background: var(--vf-danger)"></div>
+        <div class="dot" style="background: var(--vf-danger)"></div>
+        <div class="dot" style="background: var(--vf-danger)"></div>
+      </div>
+      <p style="color: var(--vf-text); font-weight: 500; font-family: 'Syne', sans-serif;">BROADCASTING EMERGENCY BEACON...</p>
+      <p style="color: var(--vf-muted); font-size: 13px; margin-top: 5px;">Synthesizing local telemetry & medical vitals summary for dispatch...</p>
+    </div>
+  `;
+
+  try {
+    // Fire the dispatch calculation sequence off to the server hub
+    const res = await fetch('http://localhost:5000/api/sos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userType: activeMode,
+        location: "Grid Zone 4, Madhapur, Hyderabad" // Mocking real hardware location details
+      })
+    });
+
+    const data = await res.json();
+    const cleanNote = data.dispatchNote.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // Display the live generated emergency briefing note directly in the UI
+    overlayContent.innerHTML = `
+      <div style="border-left: 4px solid var(--vf-danger); padding-left: 15px;">
+        <h3 style="font-family: 'Syne', sans-serif; color: var(--vf-danger); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+          <i class="ti ti-alert-triangle"></i> EMERGENCY SIGNAL ACTIVE
+        </h3>
+        <p style="color: var(--vf-muted); font-size: 12px; margin-bottom: 15px;">
+          Telemetry successfully relayed to emergency response units. Dispatch packet content:
+        </p>
+        <div style="background: rgba(255, 77, 109, 0.08); padding: 15px; border-radius: var(--vf-radius-sm); color: var(--vf-text); font-size: 13px; line-height: 1.6; text-align: left; max-height: 250px; overflow-y: auto;">
+          ${cleanNote}
+        </div>
+        <button onclick="resetSOSModal()" style="margin-top: 20px; width: 100%; padding: 12px; background: var(--vf-surface2); border: 1px solid var(--vf-border); color: var(--vf-text); font-weight: bold; border-radius: var(--vf-radius-sm); cursor: pointer;">
+          Dismiss & Reset Beacon
+        </button>
+      </div>
+    `;
+  } catch (error) {
+    overlayContent.innerHTML = `
+      <div style="text-align: center; padding: 20px;">
+        <i class="ti ti-circle-x" style="font-size: 48px; color: var(--vf-danger)"></i>
+        <p style="color: var(--vf-text); margin-top: 10px; font-weight: bold;">LOCAL ROUTING FAILURE</p>
+        <p style="color: var(--vf-muted); font-size: 13px;">Ensure your server.js instance is online on port 5000.</p>
+        <button onclick="resetSOSModal()" style="margin-top: 15px; padding: 8px 16px; background: var(--vf-surface2); border: none; color: var(--vf-text); border-radius: 6px;">Retry</button>
+      </div>
+    `;
+  }
+}
+
+// Helper function to restore the initial modal code layout when dismissed
+function resetSOSModal() {
+  closeSOS();
+  setTimeout(() => {
+    if (window.originalSOSHTML) {
+      const overlayContent = document.querySelector('#sos-overlay .sos-card') || document.getElementById('sos-overlay');
+      overlayContent.innerHTML = window.originalSOSHTML;
+      window.originalSOSHTML = null;
+    }
+  }, 300);
+}
+function toggleAccordion(el){
+  el.closest('.accordion').classList.toggle('open');
+}
+</script>
+</body>
+</html>
